@@ -7,7 +7,12 @@ const Redis = require('ioredis')
 
 require("dotenv").config();
 
-const publisher = new Redis(process.env.REDIS_URL)
+const publisher = new Redis(process.env.REDIS_URL, {
+    tls: {
+        rejectUnauthorized: false // Required for some Aiven/Valkey managed instances
+    },
+    family: 0 // Force IPv4 to prevent resolution hangs
+});
 
 const s3Client = new S3Client({
     region: 'eu-north-1',

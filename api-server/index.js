@@ -4,11 +4,22 @@ const { generateSlug } = require('random-word-slugs')
 const { ECSClient, RunTaskCommand } = require('@aws-sdk/client-ecs')
 const { Server } = require('socket.io')
 const Redis = require('ioredis')
+const cors = require('cors');
 
 const app = express()
 const PORT = 9000
 
-const subscriber = new Redis(process.env.REDIS_URL)
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST']
+}));
+
+const subscriber = new Redis(process.env.REDIS_URL, {
+    tls: {
+        rejectUnauthorized: false // Required for some Aiven/Valkey managed instances
+    },
+    family: 0 // Force IPv4 to prevent resolution hangs
+});
 
 const io = new Server({ cors: '*' })
 

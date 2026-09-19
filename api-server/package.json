@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-ecs": "^3.1135.0",
+    "cors": "^2.8.6",
     "dotenv": "^18.0.0",
     "express": "^5.2.1",
     "ioredis": "^5.11.1",
