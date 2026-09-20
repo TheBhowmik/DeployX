@@ -71,6 +71,29 @@ REDIS_URL=rediss://default:your_password@your-valkey-url.aivencloud.com:port?fam
 
 * AWS CLI configured with valid credentials (`aws configure`)
 
+---
+
+### Deploying the Build Worker to AWS ECR
+
+Since the `build-server` runs on AWS ECS Fargate (ARM64), you need to build and push its Docker image to the AWS Elastic Container Registry (ECR).
+
+#### 1. Build, Tag, and Push the Image
+```bash
+# 1. Authenticate Docker to your AWS ECR registry
+aws ecr get-login-password --region <your-region> | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.<your-region>.amazonaws.com
+
+# 2. Build the ARM64 Docker Image
+cd build-server
+docker build --platform linux/arm64 -t <image-name> .
+
+# 3. Tag the Image for your ECR Repository
+docker tag <image-name> <aws_account_id>.dkr.ecr.<your-region>.amazonaws.com/<image-name>
+
+# 4. Push the Image to AWS ECR
+docker push <aws_account_id>.dkr.ecr.<your-region>.amazonaws.com/<image-name>
+
+```
+
 
 
 ### Quick Start (Local Development)
